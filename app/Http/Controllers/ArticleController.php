@@ -22,4 +22,35 @@ class ArticleController extends Controller
     {
         return view('articles.open-graph', ['article' => $article]);
     }
+
+    public function openGraphImage(Article $article)
+    {
+        // create and cache
+        $filename = "open-graph/{$article->slug}.jpg";
+
+        $image = Storage::get($filename);
+
+        if (! $image) {
+            $image = Browsershot::url(route('articles.open-graph', $article))
+                ->preventUnsuccessfulResponse()
+                ->windowSize(1200, 630)
+                ->setScreenshotType('jpeg', 100)
+                ->screenshot();
+
+            Storage::put($filename, $image);
+        }
+
+        return response($image)
+            ->header('Content-Type', 'image/jpeg');
+
+        // create on demand
+        $image = Browsershot::url(route('articles.open-graph', $article))
+            ->preventUnsuccessfulResponse()
+            ->windowSize(1200, 630)
+            ->setScreenshotType('jpeg', 100)
+            ->screenshot();
+
+        return response($image)
+            ->header('Content-Type', 'image/jpeg');
+    }
 }

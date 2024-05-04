@@ -10,3 +10,6 @@ Route::get('/{article:slug}', [ArticleController::class, 'show'])
 
 Route::get('/{article:slug}/open-graph', [ArticleController::class, 'openGraphHtml'])
     ->name('articles.open-graph');
+
+Route::get('/{article:slug}/open-graph.jpg', [ArticleController::class, 'openGraphImage'])
+    ->name('articles.open-graph-image');
